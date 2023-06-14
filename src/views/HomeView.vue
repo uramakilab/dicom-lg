@@ -20,6 +20,7 @@ export default {
   created() {
     socket.on('change', (change) => {
       console.log(`something changed: ${change}`)
+      this.callEndpoint();
     })
   },
 
