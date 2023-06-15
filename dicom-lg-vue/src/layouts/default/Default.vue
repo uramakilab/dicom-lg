@@ -1,12 +1,15 @@
 <template>
   <v-app>
-    <default-bar />
+    <image-view-component />
+    
+    <!-- <default-bar />
 
-    <default-view />
+    <default-view /> -->
   </v-app>
 </template>
 
 <script setup>
-  import DefaultBar from './AppBar.vue'
-  import DefaultView from './View.vue'
+import DefaultBar from './AppBar.vue'
+import DefaultView from './View.vue'
+import ImageViewComponent from '../../components/image/ImageViewComponent.vue'
 </script>
