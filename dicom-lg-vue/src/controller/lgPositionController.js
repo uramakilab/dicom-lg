@@ -9,7 +9,7 @@ class LgPositionControler {
         const res = await axios.get(path).catch(err => {
             throw new Error('New error message', { cause: err })
         })
-        print(res.data)
+        console.log(res.data)
         return await res.data
     }
 }
