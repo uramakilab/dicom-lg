@@ -6,14 +6,20 @@
 </template>
 
 <script>
-import {useLgPositionStore} from '../../store/lgPositionStore';
+import { useLgPositionStore } from '../../store/lgPositionStore';
+import io from 'socket.io-client'
+const socket = io.connect('http://localhost:7171/')
 const lgPosition = useLgPositionStore();
 
 export default {
-    data: () =>({
+    data: () => ({
     }),
-    async created() {
-        await lgPosition.getPositions();
+    created() {
+        socket.on('change', (change) => {
+            console.log(`something changed: ${change}`)
+            lgPosition.getPositions();
+        })
+
     },
 }
 
