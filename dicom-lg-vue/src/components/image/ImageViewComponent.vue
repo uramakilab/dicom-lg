@@ -1,8 +1,11 @@
 <template>
     <v-row v-for="n in 3" :key="n" class="d-flex child-flex" justify="center" align="center" cols="3">
-        <v-img class="px-16 py-5" :src="`https://picsum.photos/500/300?image=${n * 5 + 10}`"></v-img>
+        <v-img class="px-16 py-5" :src="getPath(n)"></v-img>
+        <div>{{ n }}</div>
     </v-row>
-    <v-btn>test button</v-btn>
+    <v-row justify="center" align="center" v-for="item in this.positioning">
+        <div>{{ item.lg1 }}, {{ item.lg2 }}, {{ item.lg3 }}</div>
+    </v-row>
 </template>
 
 <script>
@@ -12,14 +15,21 @@ const socket = io.connect('http://localhost:7171/')
 const lgPosition = useLgPositionStore();
 
 export default {
-    data: () => ({
-    }),
+    computed: {
+        positioning() {
+            return lgPosition.$state.positioning;
+        }
+    },
+    methods: {
+        getPath: function (fileName) {
+            return new URL(`../../assets/dicoms/${fileName}.png`, import.meta.url).href
+        }
+    },
     created() {
         socket.on('change', (change) => {
-            console.log(`something changed: ${change}`)
+            console.log(change)
             lgPosition.getPositions();
         })
-
     },
 }
 
