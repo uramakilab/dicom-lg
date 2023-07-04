@@ -21,16 +21,17 @@ export default {
     },
     methods: {
         getPath: function (fileName) {
-            return new URL(`../../assets/dicoms/${fileName}.png`, import.meta.url).href
+            return new URL(`../../assets/dicoms/mock/${fileName}.png`, import.meta.url).href
         }
     },
-    created() {
-        socket.on('change', (change) => {
-            console.log(change)
-            lgPosition.getPositions();
-            console.log(this.positioning);
-        })
-    },
+    async created() {
+        socket.on('change', async (change) => {
+            console.log(change);
+            await lgPosition.getPositions();
+            console.log(JSON.parse(JSON.stringify(this.positioning)));
+        });
+        await lgPosition.getImages('6495cc254e05748bf50aa15b');
+    }
 }
 
 </script>
