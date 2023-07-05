@@ -1,13 +1,22 @@
 <template>
-    <v-row v-for="n in this.images" :key="n" class="d-flex child-flex" justify="center" align="center" cols="3"
-        style="height: 33vh;">
-        <v-img class="px-16 py-5" :src="getImageSrc(n)" style="height: 100%;"></v-img>
-    </v-row>
+    <div>
+        <v-slider v-if="images" v-model="currentIndex" :max="this.images.length - 1" :min="0" :step="stepSize"
+            :tick-step="tickSize"></v-slider>
+            
+        <center v-if="!images || !images[currentIndex]">
+            <div>{{ currentIndex }}</div>
+            <div>carregando</div>
+        </center>
+
+        <v-img v-else class="px-16 py-5" :src="currentImageSrc" style="height: 100%;"></v-img>
+
+
+    </div>
 </template>
   
 <script>
 import { useLgPositionStore } from '../../store/lgPositionStore';
-import io from 'socket.io-client'
+import io from 'socket.io-client';
 
 const socket = io.connect('http://localhost:7171/');
 const lgPosition = useLgPositionStore();
@@ -19,7 +28,18 @@ export default {
         },
         images() {
             return lgPosition.$state.images;
+        },
+        currentImageSrc() {
+            console.log(this.currentIndex)
+            return this.getImageSrc(this.images[this.currentIndex]);
         }
+    },
+    data() {
+        return {
+            currentIndex: 0,
+            stepSize: 1,
+            tickSize: 1
+        };
     },
     methods: {
         getPath(fileName) {
@@ -33,11 +53,11 @@ export default {
         },
         getImageSrc(n) {
             const imageBuffer = JSON.parse(JSON.stringify(n));
-            // console.log('Image Buffer:', imageBuffer);
+            console.log('Image Buffer:', imageBuffer);
 
             const base64Data = btoa(String.fromCharCode.apply(null, imageBuffer.data));
             const dataUrl = `data:image/png;base64,${base64Data}`;
-            // console.log('Data URL:', dataUrl);
+            console.log('Data URL:', dataUrl);
 
             return dataUrl;
         }
@@ -45,7 +65,6 @@ export default {
     async created() {
         socket.on('change', this.handlePositionChange);
         await lgPosition.getImages('6495cc254e05748bf50aa15b');
-        // console.log(JSON.parse(JSON.stringify(this.images)));
     }
 };
 </script>

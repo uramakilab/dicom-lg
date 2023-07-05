@@ -6,7 +6,7 @@ export const useLgPositionStore = defineStore('lgPosition', {
     state() {
         return {
             positioning: {},
-            images: {},
+            images: null,
         }
     },
 
